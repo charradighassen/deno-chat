@@ -1,3 +1,3 @@
 # deno-chat
 Deno chat
-https://dash.deno.com/projects/ghassen-chat-client
+https://ghassen-chat-client.deno.dev/
