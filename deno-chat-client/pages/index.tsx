@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, IS_BROWSER, PageConfig, useCallback, useEffect, useState } from "../deps.ts";
+import { h, PageConfig, useCallback, useEffect, useState } from "../deps.ts";
 
 interface IMessage {
   text: string
@@ -8,6 +8,8 @@ interface IMessage {
 export default function Home() {
   const [messages, setMessages] = useState<IMessage[]>([])
 
+  const [text, setText] = useState("")
+
 
   const getMessages = useCallback(async () => {
     const res = await fetch('https://ghassen-deno-chat.deno.dev/messages');
@@ -15,31 +17,33 @@ export default function Home() {
     setMessages(data);
   }, []
   )
+  const onSendMessage = useCallback(async () => {
+    await fetch('https://ghassen-deno-chat.deno.dev/messages', {
+      method: 'POST',
+      headers: {
+        "content-Type": 'application/json'
+      },
+      body: JSON.stringify({ text })
+    })
+    setText('')
+    getMessages()
+
+  }, [text])
+
   useEffect(() => {
     getMessages();
   }, [])
 
   return (
     <div>
-      {JSON.stringify(messages)}
+      <div>{JSON.stringify(messages)}</div>
+      <input type="text" value={text} onChange={(evt) => setText((evt.currentTarget as HTMLInputElement).value)} />
+      <button onClick={onSendMessage}>Add</button>
     </div>
   );
 }
 
-function Counter() {
-  const [count, setCount] = useState(0);
-  return (
-    <div>
-      <p>{count}</p>
-      <button onClick={() => setCount(count - 1)} disabled={!IS_BROWSER}>
-        -1
-      </button>
-      <button onClick={() => setCount(count + 1)} disabled={!IS_BROWSER}>
-        +1
-      </button>
-    </div>
-  );
-}
+
 
 export const config: PageConfig = { runtimeJS: true };
 
