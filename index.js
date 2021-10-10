@@ -1,3 +1,4 @@
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 
 const messages = [];
@@ -18,6 +19,7 @@ router
   });
 
 const app = new Application();
+app.use(oakCors())
 app.use(router.routes());
 app.use(router.allowedMethods());
 addEventListener("fetch",app.fetchEventHandler());
