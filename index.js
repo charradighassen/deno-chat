@@ -12,7 +12,7 @@ router
   .get("/messages", (context) => {
     context.response.body = messages
   })
-  .get("/messages", async (context) => {
+  .post("/messages", async (context) => {
     const message = await context.request.body().value;
     messages.push(message);
     context.response.body = message;
